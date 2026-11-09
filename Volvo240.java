@@ -11,6 +11,9 @@ public class Volvo240 extends Car{
         enginePower = 100;
         modelName = "Volvo240";
         stopEngine();
+        x = 0;
+        y = 0;
+        xy_direction_counter = 0;
     }
      
     @Override 
@@ -19,3 +22,4 @@ public class Volvo240 extends Car{
     }
 
 }
+

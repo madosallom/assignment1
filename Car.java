@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Car {
+public class Car implements Movable {
 
     public int nrDoors; // Number of doors on the car
     public double enginePower; // Engine power of the car        
@@ -8,6 +8,10 @@ public class Car {
     public Color color; // Color of the car
     public String modelName; // The car model name
     public boolean turboOn;
+    public double x;
+    public double y;
+    public double[][] xy_direction_list = {{0,1}, {1,0}, {0,-1}, {-1,0}}; //the turning direction where 0,1 is up; 1,0 is right; 0,-1 is down; -1,0 is left;
+    public int xy_direction_counter; 
 
     public int getNrDoors() {
         return nrDoors;
@@ -65,5 +69,18 @@ public class Car {
     // TODO fix this method according to assignment pm
     public void brake(double amount) {
         decrementSpeed(amount);
+    }
+
+    public void move(){
+        x = currentSpeed * xy_direction_list[xy_direction_counter%4][0];
+        y = currentSpeed * xy_direction_list[xy_direction_counter%4][1];
+    }
+
+    public void turnLeft(){
+        xy_direction_counter--;
+    }
+
+    public void turnRight(){
+        xy_direction_counter++;
     }
 }

@@ -9,6 +9,9 @@ public class Saab95 extends Car{
         turboOn = false;
         modelName = "Saab95";
         stopEngine();
+        x = 0;
+        y = 0;
+        xy_direction_counter = 0;
     }
         
     @Override 
