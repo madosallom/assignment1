@@ -54,26 +54,37 @@ public class Car implements Movable {
     }
     
     public void incrementSpeed(double amount) {
+        if (amount > 0){
         currentSpeed = getCurrentSpeed() + speedFactor() * amount;
+        }
+        if (currentSpeed > enginePower){currentSpeed = enginePower;}
     }
 
     public void decrementSpeed(double amount) {
+        if (amount > 0){
         currentSpeed = getCurrentSpeed() - speedFactor() * amount;
+        }
+        if (currentSpeed < 0) {currentSpeed = 0;}
     }
+
     
     // TODO fix this method according to assignment pm
     public void gas(double amount) {
+        if (0 <= amount && amount <= 1){      
         incrementSpeed(amount);
+        }
     }
 
     // TODO fix this method according to assignment pm
     public void brake(double amount) {
+        if (0 <= amount && amount <= 1){
         decrementSpeed(amount);
+        }
     }
 
     public void move(){
-        x = currentSpeed * xy_direction_list[xy_direction_counter%4][0];
-        y = currentSpeed * xy_direction_list[xy_direction_counter%4][1];
+        x += currentSpeed * xy_direction_list[xy_direction_counter%4][0];
+        y += currentSpeed * xy_direction_list[xy_direction_counter%4][1];
     }
 
     public void turnLeft(){
