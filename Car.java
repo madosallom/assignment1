@@ -1,17 +1,17 @@
 import java.awt.*;
 
-public class Car implements Movable {
+public abstract class Car implements Movable {
 
-    public int nrDoors; // Number of doors on the car
-    public double enginePower; // Engine power of the car        
-    public double currentSpeed; // The current speed of the car
-    public Color color; // Color of the car
-    public String modelName; // The car model name
-    public boolean turboOn;
-    public double x;
-    public double y;
-    public double[][] xy_direction_list = {{0,1}, {1,0}, {0,-1}, {-1,0}}; //the turning direction where 0,1 is up; 1,0 is right; 0,-1 is down; -1,0 is left;
-    public int xy_direction_counter; 
+    protected int nrDoors; // Number of doors on the car
+    protected double enginePower; // Engine power of the car        
+    protected double currentSpeed; // The current speed of the car
+    private Color color; // Color of the car
+    protected String modelName; // The car model name
+    protected boolean turboOn;
+    protected double x;
+    protected double y;
+    protected double[][] xy_direction_list = {{0,1}, {1,0}, {0,-1}, {-1,0}}; //the turning direction where 0,1 is up; 1,0 is right; 0,-1 is down; -1,0 is left;
+    protected int xy_direction_counter; 
 
     public int getNrDoors() {
         return nrDoors;
@@ -29,7 +29,7 @@ public class Car implements Movable {
         return color;
     }
 
-    public void setColor(Color clr) {
+    protected void setColor(Color clr) {
         color = clr;
     }
 
@@ -49,18 +49,16 @@ public class Car implements Movable {
         turboOn = false;
     }
 
-    public double speedFactor(){
-        return 0;
-    }
+    protected abstract double speedFactor();
     
-    public void incrementSpeed(double amount) {
+    private void incrementSpeed(double amount) {
         if (amount > 0){
         currentSpeed = getCurrentSpeed() + speedFactor() * amount;
         }
         if (currentSpeed > enginePower){currentSpeed = enginePower;}
     }
 
-    public void decrementSpeed(double amount) {
+    private void decrementSpeed(double amount) {
         if (amount > 0){
         currentSpeed = getCurrentSpeed() - speedFactor() * amount;
         }

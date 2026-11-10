@@ -4,7 +4,7 @@ public class Saab95 extends Car{
     
     public Saab95() {
         nrDoors = 2;
-        color = Color.red;
+        setColor(Color.red);
         enginePower = 125;
         turboOn = false;
         modelName = "Saab95";
@@ -20,5 +20,5 @@ public class Saab95 extends Car{
         if(turboOn) turbo = 1.3;
         return enginePower * 0.01 * turbo;
     }
-//test
+
 }
