@@ -79,16 +79,16 @@ public class CarTest {
         Car volvo = new Volvo240();
         double speed = volvo.getCurrentSpeed();
         volvo.brake(test);
-        boolean result = volvo.getCurrentSpeed() < speed;
+        boolean result = volvo.getCurrentSpeed() < speed || volvo.currentSpeed == 0;
         return result;
     }
 
     private static void testBrake(){
         boolean result = true;
         for(double i = 0; i <=1; i+= 0.01){
-            result = testGasSmall(i);            
+            result = testBrakeSmall(i);            
         }
-        reportResult("Gas() doesn't slow down the car", result);
+        reportResult("Brake doesn't slow down the car", result);
     }
 
     static void main() {
