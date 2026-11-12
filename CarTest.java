@@ -3,7 +3,6 @@ public class CarTest {
     private static int passed = 0;
     private static int failed = 0;
 
-    // Print whether one test passed or failed.
     private static void check(String name, boolean result) {
         if (result) {
             System.out.println("PASS: " + name);
