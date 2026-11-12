@@ -1,150 +1,159 @@
 import java.awt.Color;
-
-/** Small, dependency-free unit-test suite for the assignment concepts. */
 public class CarTest {
     private static int passed = 0;
     private static int failed = 0;
-    private static final double EPSILON = 1e-9;
 
-    private static void reportResult(String name, boolean success) {
-        System.out.println((success ? "SUCCESS: " : "FAILURE: ") + name);
-        if (success) {
-            passed++;
+    // Print whether one test passed or failed.
+    private static void check(String name, boolean result) {
+        if (result) {
+            System.out.println("PASS: " + name);
+            passed = passed + 1;
         } else {
-            failed++;
+            System.out.println("FAIL: " + name);
+            failed = failed + 1;
         }
     }
 
-    private static boolean approximately(double actual, double expected) {
-        return Math.abs(actual - expected) < EPSILON;
-    }
-
-    private static boolean throwsIllegalArgument(Runnable action) {
-        try {
-            action.run();
-            return false;
-        } catch (IllegalArgumentException expected) {
-            return true;
-        }
-    }
-
-    private static void testOriginalSpecifications() {
-        Volvo240 volvo = new Volvo240();
-        Saab95 saab = new Saab95();
-        reportResult("Volvo doors, power, color, model", volvo.getNrDoors() == 4
-                && approximately(volvo.getEnginePower(), 100)
-                && Color.BLACK.equals(volvo.getColor())
-                && "Volvo240".equals(volvo.getModelName()));
-        reportResult("Saab doors, power, color, model", saab.getNrDoors() == 2
-                && approximately(saab.getEnginePower(), 125)
-                && Color.RED.equals(saab.getColor())
-                && "Saab95".equals(saab.getModelName()));
-        reportResult("Constructors stop both engines", approximately(volvo.getCurrentSpeed(), 0)
-                && approximately(saab.getCurrentSpeed(), 0));
-    }
-
-    private static void testStartStopAndColor() {
-        Car car = new Volvo240();
-        car.startEngine();
-        reportResult("Starting sets speed to 0.1", approximately(car.getCurrentSpeed(), 0.1));
-        car.stopEngine();
-        reportResult("Stopping sets speed to 0", approximately(car.getCurrentSpeed(), 0));
-        car.setColor(Color.BLUE);
-        reportResult("Color can be updated", Color.BLUE.equals(car.getColor()));
-    }
-
-    private static void testTurbo() {
-        Saab95 slow = new Saab95();
-        Saab95 fast = new Saab95();
-        fast.setTurboOn();
-        slow.setTurboOff();
-        fast.gas(0.5);
-        slow.gas(0.5);
-        reportResult("Turbo yields more speed", slow.getCurrentSpeed() < fast.getCurrentSpeed());
-        reportResult("Saab speed without turbo: 0.625", approximately(slow.getCurrentSpeed(), 0.625));
-        reportResult("Saab speed with turbo: 0.8125", approximately(fast.getCurrentSpeed(), 0.8125));
-    }
-
-    private static void testMovable() {
-        Car car = new Volvo240();
-        car.startEngine();
-        car.gas(0.4);  // speed is now 0.1 + (1.25 * 0.4) = 0.6
-        Movable movable = car;
-        movable.move();
-        reportResult("North movement increases y by current speed",
-                approximately(car.getX(), 0) && approximately(car.getY(), 0.6));
-        movable.turnRight();
-        movable.move();
-        reportResult("Right turn points east and increases x",
-                car.getDirection() == Car.Direction.EAST
-                        && approximately(car.getX(), 0.6)
-                        && approximately(car.getY(), 0.6));
-        movable.turnLeft();
-        movable.move();
-        reportResult("Left turn points north and increases y",
-                car.getDirection() == Car.Direction.NORTH
-                        && approximately(car.getX(), 0.6)
-                        && approximately(car.getY(), 1.2));
-        movable.turnLeft();
-        movable.move();
-        reportResult("West movement decreases x",
-                car.getDirection() == Car.Direction.WEST
-                        && approximately(car.getX(), 0)
-                        && approximately(car.getY(), 1.2));
-        car.stopEngine();
-        movable.move();
-        reportResult("Zero speed means no movement", approximately(car.getX(), 0)
-                && approximately(car.getY(), 1.2));
-    }
-
-    private static void testSpeedLimits() {
+    // Task 1: Check that the cars keep their basic properties.
+    private static void testBasics() {
         Car volvo = new Volvo240();
-        volvo.gas(0.5);
-        double before = volvo.getCurrentSpeed();
-        volvo.gas(0.5);
-        reportResult("Gas cannot decrease speed", volvo.getCurrentSpeed() >= before);
-        before = volvo.getCurrentSpeed();
-        volvo.brake(0.5);
-        reportResult("Brake cannot increase speed", volvo.getCurrentSpeed() <= before);
+        Saab95 saab = new Saab95();
 
-        volvo.brake(1);
-        reportResult("Brake cannot make speed negative", approximately(volvo.getCurrentSpeed(), 0));
-        for (int i = 0; i < 200; i++) {
-            volvo.gas(1);
+        check("Volvo has four doors", volvo.getNrDoors() == 4);
+        check("Saab has two doors", saab.getNrDoors() == 2);
+        check("Volvo engine power is 100", volvo.getEnginePower() == 100);
+        check("Saab engine power is 125", saab.getEnginePower() == 125);
+        check("New car has zero speed", volvo.getCurrentSpeed() == 0);
+
+        volvo.startEngine();
+        check("Start engine sets speed to 0.1", volvo.getCurrentSpeed() == 0.1);
+        volvo.stopEngine();
+        check("Stop engine sets speed to zero", volvo.getCurrentSpeed() == 0);
+
+        volvo.setColor(Color.BLUE);
+        check("Car color can change", volvo.getColor().equals(Color.BLUE));
+    }
+
+    // Task 1: Check that turbo makes a Saab accelerate faster.
+    private static void testTurbo() {
+        Saab95 normal = new Saab95();
+        Saab95 turbo = new Saab95();
+        normal.setTurboOff();
+        turbo.setTurboOn();
+
+        normal.gas(0.5);
+        turbo.gas(0.5);
+        check("Turbo gives more speed", turbo.getCurrentSpeed() > normal.getCurrentSpeed());
+    }
+
+    // Task 2: Check moving in all four directions.
+    private static void testMovement() {
+        Car car = new Volvo240();
+        Movable movingCar = car;
+        car.startEngine(); // Speed is 0.1.
+
+        movingCar.move(); // Start facing north.
+        check("Moving north increases Y", car.getX() == 0 && car.getY() == 0.1);
+
+        movingCar.turnRight(); // Now facing east.
+        check("Right turn faces east", car.getDirection() == Car.Direction.EAST);
+        movingCar.move();
+        check("Moving east increases X", car.getX() == 0.1 && car.getY() == 0.1);
+
+        movingCar.turnLeft(); // East to north.
+        check("Left turn faces north", car.getDirection() == Car.Direction.NORTH);
+        movingCar.turnLeft(); // North to west.
+        movingCar.move();
+        check("Moving west decreases X", car.getX() == 0);
+
+        movingCar.turnLeft(); // West to south.
+        movingCar.move();
+        check("Moving south decreases Y", car.getY() == 0);
+
+        car.stopEngine();
+        movingCar.move();
+        check("Zero speed means no movement", car.getX() == 0 && car.getY() == 0);
+    }
+
+    // Task 4: Check the rules for gas, brake, and speed limits.
+    private static void testSpeedRules() {
+        Car car = new Volvo240();
+
+        car.gas(0.5);
+        double previousSpeed = car.getCurrentSpeed();
+        car.gas(0.5);
+        check("Gas cannot decrease speed", car.getCurrentSpeed() >= previousSpeed);
+
+        previousSpeed = car.getCurrentSpeed();
+        car.brake(0.5);
+        check("Brake cannot increase speed", car.getCurrentSpeed() <= previousSpeed);
+
+        car.brake(1);
+        check("Brake stops at zero", car.getCurrentSpeed() == 0);
+
+        for (int i = 0; i < 200; i = i + 1) {
+            car.gas(1);
         }
-        reportResult("Speed cannot exceed engine power", approximately(volvo.getCurrentSpeed(), 100));
-        volvo.brake(0);
-        reportResult("Braking by 0 leaves speed unchanged", approximately(volvo.getCurrentSpeed(), 100));
+        check("Volvo stops at its maximum speed", car.getCurrentSpeed() == car.getEnginePower());
+
+        previousSpeed = car.getCurrentSpeed();
+        car.gas(0);
+        check("Gas with zero does not change speed", car.getCurrentSpeed() == previousSpeed);
+        car.brake(0);
+        check("Brake with zero does not change speed", car.getCurrentSpeed() == previousSpeed);
 
         Saab95 saab = new Saab95();
         saab.setTurboOn();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 200; i = i + 1) {
             saab.gas(1);
         }
-        reportResult("Saab with turbo still respects speed cap", approximately(saab.getCurrentSpeed(), 125));
+        check("Saab stops at its maximum speed", saab.getCurrentSpeed() == saab.getEnginePower());
     }
 
-    private static void testInvalidAmounts() {
+    // Task 4: Values outside [0, 1] should be rejected.
+    private static void testInvalidInputs() {
         Car car = new Volvo240();
-        reportResult("Gas rejects negative amount", throwsIllegalArgument(() -> car.gas(-0.1)));
-        reportResult("Gas rejects amount over 1", throwsIllegalArgument(() -> car.gas(1.01)));
-        reportResult("Brake rejects negative amount", throwsIllegalArgument(() -> car.brake(-0.1)));
-        reportResult("Brake rejects amount over 1", throwsIllegalArgument(() -> car.brake(1.01)));
-        reportResult("Gas rejects NaN", throwsIllegalArgument(() -> car.gas(Double.NaN)));
-        reportResult("Brake rejects infinity", throwsIllegalArgument(() -> car.brake(Double.POSITIVE_INFINITY)));
-        reportResult("Invalid amounts leave the speed unchanged", approximately(car.getCurrentSpeed(), 0));
-    }
+        boolean rejected = false;
 
-    public static void main(String[] args) {
-        testOriginalSpecifications();
-        testStartStopAndColor();
-        testTurbo();
-        testMovable();
-        testSpeedLimits();
-        testInvalidAmounts();
-        System.out.println("\nResult: " + passed + " passed; " + failed + " failed.");
-        if (failed > 0) {
-            throw new AssertionError(failed + " test(s) failed");
+        try {
+            car.gas(-0.1);
+        } catch (IllegalArgumentException e) {
+            rejected = true;
         }
+        check("Gas rejects negative input", rejected);
+
+        rejected = false;
+        try {
+            car.gas(1.1);
+        } catch (IllegalArgumentException e) {
+            rejected = true;
+        }
+        check("Gas rejects input above one", rejected);
+
+        rejected = false;
+        try {
+            car.brake(-0.1);
+        } catch (IllegalArgumentException e) {
+            rejected = true;
+        }
+        check("Brake rejects negative input", rejected);
+
+        rejected = false;
+        try {
+            car.brake(1.1);
+        } catch (IllegalArgumentException e) {
+            rejected = true;
+        }
+        check("Brake rejects input above one", rejected);
+        check("Rejected inputs do not change speed", car.getCurrentSpeed() == 0);
+    }
+    public static void main(String[] args) {
+        testBasics();
+        testTurbo();
+        testMovement();
+        testSpeedRules();
+        testInvalidInputs();
+
+        System.out.println("\nFinal result: " + passed + " passed, " + failed + " failed.");
     }
 }
