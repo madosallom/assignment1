@@ -1,9 +1,4 @@
 import java.awt.Color;
-
-/**
- * Shared implementation for cars. A new model can extend this class and
- * override speedFactor() without changing the movement or safety logic.
- */
 public abstract class Car implements Movable {
 
     public enum Direction {
@@ -78,7 +73,6 @@ public abstract class Car implements Movable {
         currentSpeed = 0;
     }
 
-    /** Subclasses change the acceleration formula, not the safety checks. */
     protected double speedFactor() {
         return enginePower * 0.01;
     }
