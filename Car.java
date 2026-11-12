@@ -209,6 +209,6 @@ public abstract class Car implements Movable {
         } else if (direction == Direction.EAST) {
             direction = Direction.NORTH;
         }
-    }
-}*/
+    }*/
+}
 
