@@ -128,3 +128,87 @@ public abstract class Car implements Movable {
         }
     }
 }
+   // Start and stop the engine.
+    /*public void startEngine() {
+        currentSpeed = 0.1;
+    }
+
+    public void stopEngine() {
+        currentSpeed = 0;
+    }
+
+    // Volvo and Saab can change this calculation.
+    protected double speedFactor() {
+        return enginePower * 0.01;
+    }
+
+    // Check the pedal input and calculate how much speed changes.
+    private double speedChange(double amount) {
+        if (amount >= 0 && amount <= 1) {
+            return amount * speedFactor();
+        }
+        throw new IllegalArgumentException("Amount must be between 0 and 1");
+    }
+
+    // Speed goes up, but must not pass enginePower.
+    public void gas(double amount) {
+        double change = speedChange(amount);
+        currentSpeed = currentSpeed + change;
+
+        if (currentSpeed > enginePower) {
+            currentSpeed = enginePower;
+        }
+    }
+
+    // Speed goes down, but must not go below zero.
+    public void brake(double amount) {
+        double change = speedChange(amount);
+        currentSpeed = currentSpeed - change;
+
+        if (currentSpeed < 0) {
+            currentSpeed = 0;
+        }
+    }
+
+    // Moving changes only x or y, depending on direction.
+    @Override
+    public void move() {
+        if (direction == Direction.NORTH) {
+            y = y + currentSpeed;
+        } else if (direction == Direction.EAST) {
+            x = x + currentSpeed;
+        } else if (direction == Direction.SOUTH) {
+            y = y - currentSpeed;
+        } else if (direction == Direction.WEST) {
+            x = x - currentSpeed;
+        }
+    }
+
+    // Turning only changes direction, not the position.
+    @Override
+    public void turnRight() {
+        if (direction == Direction.NORTH) {
+            direction = Direction.EAST;
+        } else if (direction == Direction.EAST) {
+            direction = Direction.SOUTH;
+        } else if (direction == Direction.SOUTH) {
+            direction = Direction.WEST;
+        } else if (direction == Direction.WEST) {
+            direction = Direction.NORTH;
+        }
+    }
+
+    @Override
+    public void turnLeft() {
+        if (direction == Direction.NORTH) {
+            direction = Direction.WEST;
+        } else if (direction == Direction.WEST) {
+            direction = Direction.SOUTH;
+        } else if (direction == Direction.SOUTH) {
+            direction = Direction.EAST;
+        } else if (direction == Direction.EAST) {
+            direction = Direction.NORTH;
+        }
+    }
+}*/
+
