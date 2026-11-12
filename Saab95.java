@@ -20,7 +20,7 @@ public class Saab95 extends Car {
     protected double speedFactor() {
         return super.speedFactor() * (turboOn ? 1.3 : 1.0);
     }
-    \\@Override
+    /*@Override
     protected double speedFactor() {
         double turboFactor = 1.0;
 
@@ -30,4 +30,4 @@ public class Saab95 extends Car {
 
         return getEnginePower() * 0.01 * turboFactor;
     }
-}
+}*/
