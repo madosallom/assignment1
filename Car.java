@@ -128,8 +128,79 @@ public abstract class Car implements Movable {
         }
     }
 }
+/*import java.awt.Color;
+
+// The common code shared by every car model.
+public abstract class Car implements Movable {
+
+    // A car can face one of these four directions.
+    public enum Direction {
+        NORTH, EAST, SOUTH, WEST
+    }
+
+    // Each car keeps its own values.
+    private int nrDoors;
+    private double enginePower;
+    private Color color;
+    private String modelName;
+    private double currentSpeed;
+
+    // Position and direction of the car.
+    private double x;
+    private double y;
+    private Direction direction;
+
+    // Called by Volvo240 and Saab95 when they are created.
+    protected Car(int doors, double power, Color carColor, String name) {
+        nrDoors = doors;
+        enginePower = power;
+        color = carColor;
+        modelName = name;
+        currentSpeed = 0;
+        x = 0;
+        y = 0;
+        direction = Direction.NORTH;
+    }
+
+    // Methods that let other code read the car's values.
+    public int getNrDoors() {
+        return nrDoors;
+    }
+
+    public double getEnginePower() {
+        return enginePower;
+    }
+
+    public double getCurrentSpeed() {
+        return currentSpeed;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color newColor) {
+        color = newColor;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
    // Start and stop the engine.
-    /*public void startEngine() {
+    public void startEngine() {
         currentSpeed = 0.1;
     }
 
