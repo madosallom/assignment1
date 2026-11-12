@@ -1,6 +1,5 @@
 import java.awt.Color;
 
-/** A Saab with the original Saab95 specifications and turbo controls. */
 public class Saab95 extends Car {
     private boolean turboOn;
 
