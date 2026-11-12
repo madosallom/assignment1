@@ -1,6 +1,5 @@
 import java.awt.Color;
 
-/** A Volvo with the original Volvo240 specifications. */
 public class Volvo240 extends Car {
     private static final double TRIM_FACTOR = 1.25;
 
