@@ -11,4 +11,8 @@ public class Volvo240 extends Car {
     protected double speedFactor() {
         return super.speedFactor() * TRIM_FACTOR;
     }
+        @Override
+    \\protected double speedFactor() {
+        return getEnginePower() * 0.01 * 1.25;
+    }
 }
